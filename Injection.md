@@ -8,7 +8,8 @@ Enlace a la máquina -> [Dockerlabs](https://dockerlabs.es/)
  Una vez descargada la máquina, debemos realizar los siguientes pasos para tener acceso a la máquina:
  
  En primer lugar veremos que tenemos descargado un zip con dos archivos un .sh y un .tar.
- **Archivos**
+ 
+ ### Archivos
  
 .sh → Script de Linux con comandos. Se ejecuta en la terminal.
 
@@ -78,6 +79,7 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
