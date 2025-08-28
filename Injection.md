@@ -4,6 +4,24 @@ Dificultad -> Muy fácil
 
 Enlace a la máquina -> [Dockerlabs](https://dockerlabs.es/)
 
+## Despliegue del laboratorio
+ Una vez descargada la máquina, debemos realizar los siguientes pasos para tener acceso a la máquina:
+ 
+ En primer lugar veremos que tenemos descargado un zip con dos archivos un .sh y un .tar.
+ **Archivos**
+.sh → Script de Linux con comandos. Se ejecuta en la terminal.
+
+.tar → Archivo que agrupa otros archivos/carpetas.
+
+Comando bash auto_deploy.sh inyection.tar
+
+bash → Ejecuta un script de Linux.
+
+auto_deploy.sh → Script que hace cosas automáticamente (por ejemplo, instala o despliega algo).
+
+inyection.tar → Archivo que se pasa como argumento al script, probablemente para que el script lo use (descomprimirlo, instalarlo, etc.).
+
+En resumen: se está ejecutando un script que recibe un archivo .tar y hace lo que esté programado dentro del script con ese archivo.
 ## Reconocimiento
 
 Comenzamos realizando un escaneo general con **nmap** sobre la IP de la máquina víctima para ver que puertos tiene abiertos.
@@ -59,4 +77,5 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
