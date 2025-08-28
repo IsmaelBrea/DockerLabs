@@ -24,7 +24,7 @@ Accedemos a la web y encontramos un **panel de login**. Por el nombre de la máq
 
 Introduciendo "**admin' or 1=1-- -**" para que siempre sea verdadero, y cualquier cosa en la **password**.
 
-![Pasted image 20240512225902](https://github.com/albertomarcostic/DockerLabs-WriteUps/assets/131155486/4d8121f1-f8ab-4b0a-9fd9-ce0101d1c16c)
+![Login bypass](./images/login_bypass.png)
 
 Conseguimos bypasearlo exitosamente!
 
@@ -59,3 +59,4 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
