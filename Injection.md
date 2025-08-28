@@ -15,15 +15,13 @@ Enlace a la máquina -> [Dockerlabs](https://dockerlabs.es/)
 
 .tar → Archivo que agrupa otros archivos/carpetas.
 
-Comando bash auto_deploy.sh inyection.tar
-
-bash → Ejecuta un script de Linux.
-
-auto_deploy.sh → Script que hace cosas automáticamente (por ejemplo, instala o despliega algo).
-
-inyection.tar → Archivo que se pasa como argumento al script, probablemente para que el script lo use (descomprimirlo, instalarlo, etc.).
+Para el despliegue de la máquina tendremos que ejecutar el siguiente comando:
+```shell
+ bash auto_deploy.sh inyection.tar
+```
 
 En resumen: se está ejecutando un script que recibe un archivo .tar y hace lo que esté programado dentro del script con ese archivo.
+
 ## Reconocimiento
 
 Comenzamos realizando un escaneo general con **nmap** sobre la IP de la máquina víctima para ver que puertos tiene abiertos.
@@ -79,6 +77,7 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
