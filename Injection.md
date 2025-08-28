@@ -9,6 +9,7 @@ Enlace a la máquina -> [Dockerlabs](https://dockerlabs.es/)
  
  En primer lugar veremos que tenemos descargado un zip con dos archivos un .sh y un .tar.
  **Archivos**
+ 
 .sh → Script de Linux con comandos. Se ejecuta en la terminal.
 
 .tar → Archivo que agrupa otros archivos/carpetas.
@@ -77,5 +78,6 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
