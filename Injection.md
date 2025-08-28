@@ -4,6 +4,8 @@ Dificultad -> Muy fácil
 
 Enlace a la máquina -> [Dockerlabs](https://dockerlabs.es/)
 
+**Imprescindible tener instalado docker**
+
 ## Despliegue del laboratorio
  Una vez descargada la máquina, debemos realizar los siguientes pasos para tener acceso a la máquina:
  
@@ -77,6 +79,7 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
