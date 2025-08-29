@@ -4,7 +4,7 @@ Dificultad -> Muy fácil
 
 Enlace a la máquina -> [Dockerlabs](https://dockerlabs.es/)
 
-**Imprescindible tener instalado Docker**. Docker te permite ejecutar programas de forma aislada y portátil, como si cada programa tuviera su propio mini-ordenador dentro de tu PC.**
+**Imprescindible tener instalado Docker**. Docker te permite ejecutar programas de forma aislada y portátil, como si cada programa tuviera su propio mini-ordenador dentro de tu PC.
 
 ## Despliegue del laboratorio
  Una vez descargada la máquina, debemos realizar los siguientes pasos para tener acceso a la máquina:
@@ -79,6 +79,7 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
