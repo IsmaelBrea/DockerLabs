@@ -84,19 +84,21 @@ Estamos dentro !
 
 ## Escalada de privilegios
 
-Vemos que podemos ejecutar **env** como el usuario **root**. Será tan sencillo como ejecutar:
+Podemos probar a usar sudo su para acceder directamente como root pero vemos que no funciona porque en esa máquina no está instalado sudo. 
 
-```shell
-sudo /usr/bin/env /bin/bash
-```
+Por tanto tenemos que probar otras formas de escalar privilegios como los binarios SUID (/usr/bin/env, passwd, etc.) o vulnerabilidades del sistema, porque no puedes pedir permisos de root con sudo si no está instalado.
 
-```shell
-whoami
-------------
-root
-```
+
+Primero, con el comando find / -perm -4000 2>/dev/null lo que haces es buscar todos los programas que tienen el bit SUID activado en el sistema. Los binarios SUID son programas que, al ejecutarse, toman los permisos de su propietario en lugar de los permisos del usuario que los llama. En la mayoría de los casos, estos programas son propiedad de root, por lo que pueden ejecutarse con privilegios elevados aunque los invoque un usuario normal.
+
+Entre los resultados que devuelve la búsqueda aparece /usr/bin/env. Este binario puede usarse para abrir una shell con los permisos de root porque tiene SUID. Al ejecutarlo con la opción de abrir bash manteniendo privilegios, se crea una nueva shell que hereda los permisos del binario, es decir, los permisos de root.
+
+Después, al consultar quién eres con whoami dentro de esta nueva shell, te devuelve root. Esto significa que ahora tienes acceso completo como root, con todos los permisos del sistema. En pocas palabras, encontraste un binario con privilegios especiales y lo usaste para elevar tus privilegios de usuario normal a administrador del sistema.
+
+![Root](./images/escalar_privilegios.png)
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
