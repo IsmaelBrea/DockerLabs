@@ -51,7 +51,20 @@ La salida indica que Nmap no hizo ping previo al host y asumió que estaba activ
 
 Accedemos a la web y encontramos un **panel de login**. Por el nombre de la máquina, intentamos explotarlo con una **SQL Injection**.
 
-Introduciendo "**admin' or 1=1-- -**" para que siempre sea verdadero, y cualquier cosa en la **password**.
+Introduciendoadmin como usuario y de contraseña or 1=1-- -**" para que siempre sea verdadero, y cualquier cosa en la **password**. Si en el login pones usuario: admin y en la contraseña or 1=1-- -, la base de datos entiende que la condición será siempre verdadera, así que te deja entrar como admin sin importar la clave real. 
+
+Esto funcionaría como una consulta del siguente tipo en la base de datos:
+
+```sql
+SELECT * FROM usuarios WHERE usuario = 'admin' AND password = 'or 1=1-- -';
+```
+El -- - es un comentario en SQL, así que todo lo que viene después se ignora.
+
+Entonces la parte útil es:
+
+Como 1=1 siempre es verdadero, la consulta devuelve el usuario admin aunque la contraseña esté mal.
+
+Por eso te deja entrar: la condición se vuelve siempre verdadera.
 
 ![Login bypass](./images/login_bypass.png)
 
@@ -88,6 +101,7 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
