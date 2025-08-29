@@ -95,9 +95,10 @@ Entre los resultados que devuelve la búsqueda aparece /usr/bin/env. Este binari
 
 Después, al consultar quién eres con whoami dentro de esta nueva shell, te devuelve root. Esto significa que ahora tienes acceso completo como root, con todos los permisos del sistema. En pocas palabras, encontraste un binario con privilegios especiales y lo usaste para elevar tus privilegios de usuario normal a administrador del sistema.
 
-![Root](./images/escalar_privilegios.png)
+![Root](./images/escalar_privilegios1.png)
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
