@@ -24,7 +24,7 @@ sudo bash auto_deploy.sh inyection.tar
 
 En resumen: se está ejecutando con permisos de superusuario root (si no no funciona) un script que recibe un archivo .tar y hace lo que esté programado dentro del script con ese archivo.
 
-![Iniciar una máquina](./images/iniciar_maquina.png)
+![Iniciar una máquina](./images/iniciar_máquina.png)
 
 Este es el resultado de ejcutar el comando bash como root para iniciar la máquina. Vemos que nos da una dirección IP sobre la que podemos empezar a operar. Además vemos que para borrar todo de la máquina basta con hacer Ctrl+C, por lo que lo que recomiendo es abrir una nueva terminal al lado para resolver la máquina y una vez resuelta volver a esta y borrarla.
 
@@ -83,6 +83,7 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
