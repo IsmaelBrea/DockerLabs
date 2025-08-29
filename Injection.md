@@ -19,10 +19,10 @@ Enlace a la máquina -> [Dockerlabs](https://dockerlabs.es/)
 
 Para el despliegue de la máquina tendremos que ejecutar el siguiente comando:
 ```shell
- bash auto_deploy.sh inyection.tar
+sudo bash auto_deploy.sh inyection.tar
 ```
 
-En resumen: se está ejecutando un script que recibe un archivo .tar y hace lo que esté programado dentro del script con ese archivo.
+En resumen: se está ejecutando con permisos de superusuario root (si no no funciona) un script que recibe un archivo .tar y hace lo que esté programado dentro del script con ese archivo.
 
 ## Reconocimiento
 
@@ -79,6 +79,7 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
