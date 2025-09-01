@@ -47,7 +47,7 @@ Este comando de Nmap usa varias flags para realizar un escaneo completo de todos
 
 La salida indica que Nmap no hizo ping previo al host y asumió que estaba activo. Se escanearon los 65.535 puertos de la IP 172.17.0.2 y se descubrió que solo los puertos 22 (SSH) y 80 (HTTP) estaban abiertos, mientras que el resto estaban cerrados. La parte final confirma que el host respondió rápido, muestra el estado de los puertos encontrados.
 
-Vamos a empezar por ver que se aloja en la Ip accediendo a ella por el puerto 80. Que el puerto 22 esté abierto también es interesante para más adelante, porque podemos relizar algún ataque de fuerza bruta en caso de obtener algún usuario y contraseña.
+Vamos a empezar por ver que se aloja en la IP accediendo a ella por el puerto 80. Que el puerto 22 esté abierto también es interesante para más adelante, porque podemos intentar dentro de la sesión de algún usuario en caso de obtener su contraseña.
 
 ## Explotación
 
@@ -102,6 +102,7 @@ Después, al consultar quién eres con whoami dentro de esta nueva shell, te dev
 ![Root](./images/escalar_privilegios1.png)
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
