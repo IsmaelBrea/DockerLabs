@@ -62,6 +62,8 @@ Como 1=1 siempre es verdadero, la consulta devuelve el usuario admin aunque la c
 
 Por eso te deja entrar: la condición se vuelve siempre verdadera.
 
+También podemos poner la condición  ' OR '1'='1  en el apartado de user y poner cualquier contraseña y también conseguiremos acceder a la web de la misma forma.
+
 ![Login bypass](./images/login_bypass.png)
 
 Conseguimos bypasearlo exitosamente!
@@ -98,6 +100,7 @@ Después, al consultar quién eres con whoami dentro de esta nueva shell, te dev
 ![Root](./images/escalar_privilegios1.png)
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
