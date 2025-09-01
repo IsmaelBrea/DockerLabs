@@ -49,12 +49,12 @@ Podemos ver que tenemos dos puertos abiertos que son el 22 (ssh) y el 80(http). 
 
 ## Fuzzing
 
-Para poder obtener infroamción acerca de la página que tienen alojada en la IP, vamos usar fuzzing, que es una técnica que consiste en enviar datos aleatorios, inesperados o mal formados a un programa, servicio o aplicación para ver cómo responde. El objetivo principal es detectar errores, vulnerabilidades o fallos de seguridad.
+Para poder obtener información acerca de la página que tienen alojada en la IP, vamos a usar fuzzing, que es una técnica que consiste en enviar datos aleatorios, inesperados o mal formados a un programa, servicio o aplicación para ver cómo responde. El objetivo principal es detectar errores, vulnerabilidades o fallos de seguridad.
 
-Para ello vamos a utilizar distintas herrmaientas de fuzzing web para encontrar archivos o directorios web dentro de la página:
+Para ello vamos a utilizar la herrmaienta de fuzzing web gobuster para encontrar archivos o directorios web dentro de la página:
 
  ### Gobuster
- He probado distintas combiaciones en gobuster para ver si encontraba algo y he encontrado un php con el siguiente comando:
+He probado distintas combinaciones en gobuster para ver si encontraba algo y he encontrado un php con el siguiente comando:
  ```bash
  gobuster dir -u http://172.17.0.2/ -w /usr/share/SecLists/Discovery/Web-Content/directory-list-2.3-big.txt -t 20 -x html,php,txt,php.bak
 ---------------------------------------------------------------------------------
@@ -174,6 +174,7 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
