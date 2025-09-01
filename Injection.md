@@ -45,7 +45,9 @@ PORT   STATE SERVICE REASON
 Este comando de Nmap usa varias flags para realizar un escaneo completo de todos los puertos TCP de la IP 172.17.0.2. La flag -p- indica que se deben escanear todos los puertos posibles (0-65535), mientras que --open filtra el resultado para mostrar solo los puertos abiertos. La opción -sT realiza un TCP Connect Scan, es decir, se conecta completamente a cada puerto en lugar de hacer un escaneo semiabierto. Con --min-rate 5000 se fuerza a Nmap a enviar al menos 5000 paquetes por segundo, acelerando el proceso, y -vvv activa el modo verbose muy detallado, mostrando información adicional durante el escaneo. La flag -n evita la resolución DNS para usar solo la IP, y -Pn hace que Nmap no realice ping previo, asumiendo que el host está activo. Finalmente, -oG allPorts guarda la salida en un archivo en formato grepable, útil para filtrarlo o procesarlo después.
 
 
-La salida indica que Nmap no hizo ping previo al host y asumió que estaba activo. Se escanearon los 65.535 puertos de la IP 172.17.0.2 y se descubrió que solo los puertos 22 (SSH) y 80 (HTTP) estaban abiertos, mientras que el resto estaban cerrados. La parte final confirma que el host respondió rápido, muestra el estado de los puertos encontrados
+La salida indica que Nmap no hizo ping previo al host y asumió que estaba activo. Se escanearon los 65.535 puertos de la IP 172.17.0.2 y se descubrió que solo los puertos 22 (SSH) y 80 (HTTP) estaban abiertos, mientras que el resto estaban cerrados. La parte final confirma que el host respondió rápido, muestra el estado de los puertos encontrados.
+
+Vamos a empezar por ver que se aloja en la Ip accediendo a ella por el puerto 80. Que el puerto 22 esté abierto también es interesante para más adelante, porque podemos relizar algún ataque de fuerza bruta en caso de obtener algún usuario y contraseña.
 
 ## Explotación
 
@@ -100,6 +102,7 @@ Después, al consultar quién eres con whoami dentro de esta nueva shell, te dev
 ![Root](./images/escalar_privilegios1.png)
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
