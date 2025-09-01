@@ -42,7 +42,7 @@ MAC Address: 02:42:AC:11:00:02 (Unknown)
 ***
 ```
 
-Podemos ver que tenemos dos puertos abiertos que son el 22 (ssh) y el 80(http). El puerto 22 siempre puede ser importante para poder gacer fuerza bruta si sabemos un usuarion y contraseña. Como el http está abierto, vamos a acceder a la IP en el buscador. Al acceder podemos ver que tiene una plantilla de Apache.
+Podemos ver que tenemos dos puertos abiertos que son el 22 (ssh) y el 80(http). El puerto 22 siempre puede ser importante para poder gacer fuerza bruta si sabemos un usuario y contraseña. Como el http está abierto, vamos a acceder a la IP en el buscador. Al acceder podemos ver que tiene una plantilla de Apache.
 
 ![Plantilla](/images/plantilla_apache.png)
 
@@ -174,6 +174,7 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
