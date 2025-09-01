@@ -44,7 +44,7 @@ MAC Address: 02:42:AC:11:00:02 (Unknown)
 
 Podemos ver que tenemos dos puertos abiertos que son el 22 (ssh) y el 80(http). El puerto 22 siempre puede ser importante para poder gacer fuerza bruta si sabemos un usuarion y contraseña. Como el http está abierto, vamos a acceder a la IP en el buscador. Al acceder podemos ver que tiene una plantilla de Apache.
 
-![Plantilla] (/images/plantilla_apache.png)
+![Plantilla](/images/plantilla_apache.png)
 
 
 ## Fuzzing
@@ -69,11 +69,11 @@ La opción -x permite probar diferentes extensiones (por ejemplo, .php, .html) s
 
 En conjunto, Gobuster intenta encontrar archivos o directorios en la URL o IP que le indicamos, que en este caso corresponde a la máquina objetivo donde está alojada la página web y la plantilla de Apache.
 
-![Gobuster] (/images/gobuster_1.png)
+![Gobuster](/images/gobuster_1.png)
 
 Al acceder a /secret.php podemos ver lo siguiente:
 
-![PHP] (/images/secret_php.png)
+![PHP](/images/secret_php.png)
 
 ## Explotación
 Solo tenemos un vector de ataque con la información que tenemos. Sabemos que está abierto el puerto 22 y que hay un usuario llamada Mario. Por tanto vamos a realizar fuerza bruta a este puerto utilizando **hydra**.
@@ -120,7 +120,7 @@ ssh → protocolo que se va a atacar.
 -t 4 → número de hilos concurrentes, es decir, Hydra hará 4 intentos al mismo tiempo para acelerar el proceso.
 
 
-![Hydra1] (/images/hydra1.png)
+![Hydra1](/images/hydra1.png)
 
 Obtenemos la contraseña, que como vemos es chocolate.
 
@@ -174,6 +174,7 @@ root
 ```
 
 Hemos alcanzado el nivel de privilegios máximos en el sistema!
+
 
 
 
