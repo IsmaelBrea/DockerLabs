@@ -52,7 +52,7 @@ Para poder obtener información acerca de la página que tienen alojada en la IP
 
 Para ello vamos a utilizar la herrmaienta de fuzzing web gobuster para encontrar archivos o directorios web dentro de la página:
 
- ### Gobuster
+
 He probado distintas combinaciones en gobuster para ver si encontraba algo y he encontrado un php con el siguiente comando:
  ```bash
  gobuster dir -u http://172.17.0.2/ -w /usr/share/SecLists/Discovery/Web-Content/directory-list-2.3-big.txt -t 20 -x html,php,txt,php.bak
@@ -218,7 +218,7 @@ nano users.txt
 
 hydra -L users.txt -P /usr/share/wordlists/rockyou.txt ssh://20.20.20.3
 ```
-Encontramos una password para manchi:
+Encontramos una password para manchi y otro para seller:
 
 <img width="870" height="76" alt="imagen" src="https://github.com/user-attachments/assets/f222128e-e0ad-4209-8f75-d700a67e3dc2" />
 
@@ -227,4 +227,10 @@ proxychains ssh manchi@20.20.20.3
 ```
 Estamos dentro de la tercera máquina.
 
+
+
+### Inclusion
+
+Tenemos que escalar privs. En la búsqueda del bit setuid detectamos lo siguiente:
+<img width="852" height="237" alt="imagen" src="https://github.com/user-attachments/assets/184cfc6e-18a0-4eec-968d-39f2eb38648e" />
 
