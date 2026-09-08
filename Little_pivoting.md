@@ -35,7 +35,9 @@ sudo bash auto_deploy.sh trust.tar upload.tar inclusion.tar
 ```
 
 Este es el esquema de red que tenemos:
-<img width="1100" height="441" alt="imagen" src="https://github.com/user-attachments/assets/
+
+<img width="804" height="146" alt="imagen" src="https://github.com/user-attachments/assets/e352665c-c586-4b2f-b75c-14de947add59" />
+
 
 
 
