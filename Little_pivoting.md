@@ -36,9 +36,31 @@ sudo bash auto_deploy.sh trust.tar upload.tar inclusion.tar
 
 Este es el esquema de red que tenemos:
 
-<img width="804" height="146" alt="imagen" src="https://github.com/user-attachments/assets/e352665c-c586-4b2f-b75c-14de947add59" />
+<img width="787" height="108" alt="imagen" src="https://github.com/user-attachments/assets/b8d31ad4-3460-40cd-84ec-bc0139b51463" />
 
-
+```
+                          KALI
+                  eth0: 192.168.231.129/24
+                           │
+                           │
+                    ┌──────┴──────┐
+                    │ Docker Host │
+                    │             │
+                    │ br-...      │
+                    │ 172.19.0.1  │
+                    └──────┬──────┘
+                           │
+                 dockernetwork
+                 172.19.0.0/16
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+          ▼                ▼                ▼
+   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+   │    TRUST    │  │    UPLOAD   │  │  INCLUSION  │
+   │ 172.19.0.2  │  │ 172.19.0.3  │  │ 172.19.0.4  │
+   └─────────────┘  └─────────────┘  └─────────────┘
+```
 
 
 
