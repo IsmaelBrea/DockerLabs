@@ -36,32 +36,13 @@ sudo bash auto_deploy.sh trust.tar upload.tar inclusion.tar
 
 Este es el esquema de red que tenemos:
 
-<img width="787" height="108" alt="imagen" src="https://github.com/user-attachments/assets/b8d31ad4-3460-40cd-84ec-bc0139b51463" />
+<img width="817" height="138" alt="imagen" src="https://github.com/user-attachments/assets/e97c81e0-262f-45a5-9e0b-d847177daedd" />
 
-```
-                          KALI
-                  eth0: 192.168.231.129/24
-                           │
-                           │
-                    ┌──────┴──────┐
-                    │ Docker Host │
-                    │             │
-                    │ br-...      │
-                    │ 172.19.0.1  │
-                    └──────┬──────┘
-                           │
-                 dockernetwork
-                 172.19.0.0/16
-                           │
-          ┌────────────────┼────────────────┐
-          │                │                │
-          ▼                ▼                ▼
-   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-   │    TRUST    │  │    UPLOAD   │  │  INCLUSION  │
-   │ 172.19.0.2  │  │ 172.19.0.3  │  │ 172.19.0.4  │
-   └─────────────┘  └─────────────┘  └─────────────┘
-```
 
+### Trust
+Vamos a empezar por vulnerar la máquina trust. Para ello escaneamos la máquina:
+```bash
+nmap -
 
 
 
