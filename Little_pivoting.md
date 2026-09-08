@@ -1,4 +1,4 @@
-# Máquina Trust
+# Máquina Little Pivoting
 
 Dificultad -> Media
 
@@ -113,6 +113,14 @@ Encontramos esto:
 
 Tenemos dos interfaces de red. Una a la máquina Kali y otra a otra red interna a la que Kali no va tener acceso. 
 
+Si hacemos un ping desde Kali a la nueva interfaz no funciona puesto que no hay conexión:
 
+<img width="544" height="108" alt="imagen" src="https://github.com/user-attachments/assets/bcd79f63-bd76-4fb6-bc3f-bf9cc1ca353e" />
+
+Por tanto, usaremos la máquina trust como pivote para acceder desde la Kali a la 20.20.20.2.
+
+Usaremos chisel.
+
+Como en Trust no tenemos chisel, tenemos que pasarle el binario a la máquina desde Kali.
 
 
