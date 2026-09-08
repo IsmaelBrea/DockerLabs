@@ -42,7 +42,10 @@ Este es el esquema de red que tenemos:
 ### Trust
 Vamos a empezar por vulnerar la máquina trust. Para ello escaneamos la máquina:
 ```bash
-nmap -
+nmap -SCV -p- --open --min-rate 5000 10.10.10.2 -vvv
+```
+
+Encontramos abiertos los puertos 22 y 80.
 
 
 
