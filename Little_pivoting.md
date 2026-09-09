@@ -435,6 +435,9 @@ nc -lvnp 1234
 Si volvemos al listener de kali, veremos que tenemos una sesión. Hemos conseguido acceder al servidor.
 <img width="1412" height="284" alt="imagen" src="https://github.com/user-attachments/assets/545df2a8-8029-462b-96d9-e0aafc616398" />
 
+Resumen de cómo quedó aquí el pivoting para poder obtener la shell de la 30.30.30.3 en nuestro Kali 10.10.10.1:
+La reverse shell será enviada a la máquina 30.30.30.2:443, la 20.20.20.3 redirigirá todo lo que venga por la 443 hacia la 20.20.20.2:442, y finalmente de la 20.20.20.2:442 a la 10.10.10.1:441
+
 ### Upload
 Hemos conseguido acceso a la última máquina. Solo nos queda escalar privilegios:
 
