@@ -586,3 +586,15 @@ run
 
 Ahora en esta máquina nos encuentra abiertos el puerto 22 y el puerto 80.
 
+<img width="726" height="125" alt="imagen" src="https://github.com/user-attachments/assets/9993c7d9-d967-4e80-8130-a1984355a9c2" />
+
+Estamos consiguiendo alcanzar la IP a través de nuestra máquina Kali puesto que en Metasploit tenemos añadidas las rutas a través de la sesión (donde está Trust) que si que tiene acceso a la nueva red.
+
+Ahora queremos vulnerar esta máquina. Lo suyo sería probar la web en el navegador por ejemplo, pero no funcionará porque no tenemos acceso en nuestro Kali. Por eso, utilizaremos ahora port forwarding para redireccionar esos puertos a otros puertos de nuestro Kali y así poder acceder a la máquina. El pivoting de esta máquina ya lo hemos hecho, ahora tenemos que hacer port forwarding.
+
+**PORT FORWARDING**
+
+Ahora queremos vulnerar esta máquina. Lo suyo sería probar la web en el navegador por ejemplo, pero no funcionará porque no tenemos acceso en nuestro Kali. Por eso, utilizaremos ahora port forwarding para redireccionar esos puertos a otros puertos de nuestro Kali y así poder acceder a la máquina. 
+
+Y aquí hay una diferencia importante respecto a Chisel: con Meterpreter podemos utilizar `portfwd`.
+
