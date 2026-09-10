@@ -561,7 +561,16 @@ Ahora salimos de la sesión (Ctrl+Z) y podemos ver las rutas con `route`.
 
 Ahora Metasploit sabe que para llegar a cualquier IP 20.20.20.X debe utilizar la sesión Meterpreter 2.
 
-Vamos a usar un módulo para escanear máquinas en la red nueva que acabamos de añadir a Metasploit:
+Vamos a usar dos módulos para escanear máquinas en la red nueva que acabamos de añadir a Metasploit:
+```bash
+use auxiliary/scanner/discovery/arp_sweep
+set SESSION <ID>
+set RHOSTS <RANGO_IP> # Ejemplo: 20.20.20.0/24
+run
+```
+
+Esto por si solo hace un barrido arp para encontrar hosts. Ya solo con esto encontramos una nueva IP en la red interna: 20.20.20.3. Con otro módulo especificando puerto podemos comprobarlo:
+
 ```bash
 use auxiliary/scanner/portscan/tcp
 options
@@ -572,8 +581,6 @@ set CONCURRENCY 10
 set TIMEOUT 500
 run
 ```
-
-Encontramos una máquina nueva en la nueva red: 20.20.20.3
 
 <img width="589" height="326" alt="imagen" src="https://github.com/user-attachments/assets/01a80a15-6e1d-4b38-8133-3cf918c3f340" />
 
