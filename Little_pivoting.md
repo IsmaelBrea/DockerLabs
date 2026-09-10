@@ -605,3 +605,28 @@ Ahora queremos vulnerar esta máquina. Lo suyo sería probar la web en el navega
 
 Y aquí hay una diferencia importante respecto a Chisel: con Meterpreter podemos utilizar `portfwd`.
 
+Sabemos que la máquina nueva tiene el puerto 80 abierto y queremos ver su web. Lo que vamos a hacer es que cuando accedamos a nuestro localhost:8080 se nos rediriga al puerto 80 de la máquina remota 20.20.20.3.
+
+Ejecutamos en meterpreter:
+```bash
+portfwd add -l 8080 -p 80 -r 20.20.20.3 
+```
+
+-l: local
+-p: port
+-r: remote 
+
+Para ver los port forwardings:
+```bash
+portfwd list
+```
+
+<img width="748" height="288" alt="imagen" src="https://github.com/user-attachments/assets/28f73a87-b003-4257-8281-ca1772020cf8" />
+
+Ahora si accedemos a localhost:8080 en nuestro navegador de Kali podemos acceder a la web de la máquina 20.20.20.3:
+
+<img width="788" height="702" alt="imagen" src="https://github.com/user-attachments/assets/e4ac29e7-e13f-418c-8874-3e4a89d2b8fc" />
+
+
+Como ya vimos en la resolución de chisel es simplemente una plantilla de Apache. 
+
