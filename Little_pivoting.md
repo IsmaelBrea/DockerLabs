@@ -628,5 +628,5 @@ Ahora si accedemos a localhost:8080 en nuestro navegador de Kali podemos acceder
 <img width="788" height="702" alt="imagen" src="https://github.com/user-attachments/assets/e4ac29e7-e13f-418c-8874-3e4a89d2b8fc" />
 
 
-Como ya vimos en la resolución de chisel es simplemente una plantilla de Apache. 
+Como ya vimos en la resolución de chisel es simplemente una plantilla de Apache, porque la web se aloja en /shop. Esto lo descurbrimos después del fuzzing. 
 
