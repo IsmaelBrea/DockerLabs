@@ -630,3 +630,17 @@ Ahora si accedemos a localhost:8080 en nuestro navegador de Kali podemos acceder
 
 Como ya vimos en la resolución de chisel es simplemente una plantilla de Apache, porque la web se aloja en /shop. Esto lo descurbrimos después del fuzzing. 
 
+Ahora por ejemplo para hacer el fuzzing en este caso tendríamos que hacerlo sobre localhost 127.0.0.1:8080.:
+```bash
+# En una terminal nueva
+gobuster dir -u http://127.0.0.1:8080 -w /usr/share/wordlists/dirb/common.txt
+```
+
+Aquí encontramos el /shop y tendríamos que encontrar luego el LFI.  Obtenemos una ruta donde encontramos /etc/passwd y vemos los 2 usuarios manchi y seller sobre los que hacemos fuerza bruta. El flujo para atacar ssh es el mismo:
+
+Forwardeamos un puerto nuestro de Kali desde meterpreter al puerto 22 de la máquina objetivo. Luego realizamos la fuerza bruta sobre el localhost: puerto nuevo.
+```bash
+portfwd add -l 2222 -p 22 -r 20.20.20.3
+```
+
+Y así todo el rato. Dejo aquí la explicación, solo quería enseñar otra forma de hacer pivoting.
