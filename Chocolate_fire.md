@@ -52,10 +52,11 @@ Entramos la web alojada y encontramos esto:
 Vamos a probar la 9090. Nos encontramos un panel de administración de Openfire. Openfire es un servidor de mensajería instantánea basado en XMPP.
 
 Piensa en él como el servidor que gestiona una especie de chat interno entre usuarios:
-
+```text
 Usuario A ──┐
             ├──> Openfire ──> Usuario B
 Usuario C ──┘
+```
 
 <img width="1666" height="834" alt="imagen" src="https://github.com/user-attachments/assets/6119bbde-2718-470d-9c21-07338feede79" />
 
