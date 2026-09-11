@@ -26,7 +26,7 @@ Encontramos bastantes puertos abiertos:
 
 Como hemos ejecutado -sCV nos mostrará las versiones de los servicios y algunos detalles de ellos al ejecutar los scripts básicos. 
 
-Hay 3 servicios de primeras que me llaman la atención para atacar y por los que vamos a empezar que son el 22(SSH), el 7070(HTTP de Openfire)y el 9090(HTTP y posible interfaz de administración de Openfire). El resto de puertos son:
+Hay 3 servicios de primeras que me llaman la atención para atacar y por los que vamos a empezar que son el 22(SSH), el 7070(HTTP de Openfire) y el 9090(HTTP y posible interfaz de administración de Openfire). El resto de puertos son:
 
 
 |   Puerto | Servicio       | Información                   |
@@ -60,7 +60,7 @@ Usuario C ──┘
 
 <img width="1666" height="834" alt="imagen" src="https://github.com/user-attachments/assets/6119bbde-2718-470d-9c21-07338feede79" />
 
-Vemos algo interesante abajo de la imagen y es la versión actual del Openfire. Quizás podemos buscar algún exploit que nos permita bypassear este login y tener acceso al panel de Openfire.Si buscamos en google openfire 6.7.4 exploit obtenemos un CVE:
+Vemos algo interesante abajo de la imagen y es la versión actual del Openfire. Quizás podemos buscar algún exploit que nos permita bypassear este login y tener acceso al panel de Openfire. Si buscamos en google openfire 6.7.4 exploit obtenemos un CVE:
 
 <img width="1169" height="775" alt="imagen" src="https://github.com/user-attachments/assets/bd54c69a-24e8-41b9-92e1-b8e1c978718b" />
 
