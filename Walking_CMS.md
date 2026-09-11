@@ -87,7 +87,25 @@ Encontramos:
 | **`readme.html`**              | Baja         | Revela información sobre WordPress.                                                                             |
 | **WP-Cron externo**            | Baja         | `wp-cron.php` es accesible externamente.                                                                        |
 
+Y ahora vamos a enumerar usuarios:
+```bash
+wpscan --url http://172.17.0.2/wordpress -e u --exclude-content-based "10701"
+```
 
+Encontramos al usuario "mario". Muy importante de cara al login.
 
+En las rutas anteriores, comprobé en el navegador y no había nada. Podríamos hacer fuzzing sobre ellas pero ahora es más interesante probar fuerza bruta con mario.
+```bash
+wpscan --url http://172.17.0.2/wordpress -U mario -P /usr/share/wordlists/rockyou.txt -t 20 
+```
+Encontramos la password del usuario mario:
+<img width="1909" height="443" alt="imagen" src="https://github.com/user-attachments/assets/c91ab536-e373-457a-a1c5-6da8a340fea6" />
 
+Accedemos en `http://172.17.0.2/wordpress/wp-login.php`
+
+<img width="1882" height="830" alt="imagen" src="https://github.com/user-attachments/assets/1c4fe9f6-41d3-4aec-b23b-ae3709de7467" />
+
+Estamos dentro de la sesión de wordpress de mario. 
+
+Si accedemos al apartado de usuarios, podemos ver que mario es el único usuario activo y que tiene perfil de administrador, con lo que somos administradores de la web. Como no hay forma de acceder a una sesión de comandos puesto que es un CMS y tampoco hay más puertos en la máquina podemos concluir que hemos finalizado la máquina. 
 
