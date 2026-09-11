@@ -1,4 +1,4 @@
-<img width="1169" height="775" alt="imagen" src="https://github.com/user-attachments/assets/a4c375fa-fe10-423e-af5e-e930a5a91a38" /># Máquina Chocolate Fire
+# Máquina Chocolate Fire
 
 Dificultad -> Media
 
