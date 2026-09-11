@@ -83,7 +83,7 @@ Obtenemos lo siguiente:
 
 Hemos explotado un RCE. Por aquí ya tenemos 2 cosas: una sesión y unas credenciales para entrar en Openfire. Por supuesto entramos en Openfire y vamos a inspeccionar la sesión y la web.
 
-Realmente ya somos root en la sesión, ya habríamos completado la máquina puesto que habría otros caminos distintos de resolución, como por ejemplo entrar con las credenciales por defecto de OpenFire admin:admin, encontrar un usuario aplicar fuerza bruta, entrar en su sesión SSH y escalar privilegios. Pero al realizarlo de esta forma ya tenemos acceso a la máquina como root:
+Realmente ya somos root en la sesión, ya habríamos completado la resolución de la máquina. Sin embargo habría otros caminos distintos de resolución, como por ejemplo entrar con las credenciales por defecto de OpenFire admin:admin, encontrar un usuario aplicar fuerza bruta, entrar en su sesión SSH y escalar privilegios. Pero al realizarlo de esta forma ya tenemos acceso a la máquina como root:
 
 <img width="276" height="113" alt="imagen" src="https://github.com/user-attachments/assets/c939b723-3290-4f6a-ad16-97eab6dde66a" />
 
