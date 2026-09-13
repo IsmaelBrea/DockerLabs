@@ -19,7 +19,7 @@ Enlace a la máquina -> [Dockerlabs](https://dockerlabs.es/)
 
 Para el despliegue de la máquina tendremos que ejecutar el siguiente comando:
 ```shell
-sudo bash auto_deploy.sh trust.tar
+sudo bash auto_deploy.sh domain.tar
 ```
 
 
