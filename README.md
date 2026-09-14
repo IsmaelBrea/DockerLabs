@@ -14,5 +14,5 @@ El objetivo es:
 - Little pivoting: Máquina enfocada específicamente en pivoting, donde debes comprometer una máquina y utilizarla como puente para alcanzar otra máquina/red interna que no es accesible directamente desde Kali.
 - Chocolate Fire: Enumeración de servicios → explotación de una vulnerabilidad en Openfire para obtener una reverse shell como root.
 - Domain: Enumeración SMB → fuerza bruta → acceso como usuario → explotación de recurso web → escalada de privilegios con SUID.
-- Find_Yout_Style: explotación de Drupal → acceso como www-data → escalada de privs → abuso de binarios para acceder a archivos de root.
+- Find_Your_Style: explotación de Drupal → acceso como www-data → escalada de privs → abuso de binarios para acceder a archivos de root.
   
