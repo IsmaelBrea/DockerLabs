@@ -15,4 +15,6 @@ El objetivo es:
 - Chocolate Fire: Enumeración de servicios → explotación de una vulnerabilidad en Openfire para obtener una reverse shell como root.
 - Domain: Enumeración SMB → fuerza bruta → acceso como usuario → explotación de recurso web → escalada de privilegios con SUID.
 - Find_Your_Style: explotación de Drupal → acceso como www-data → escalada de privs → abuso de binarios para acceder a archivos de root.
+- Walking Dead: Enumeración de servicios → identificación de una vulnerabilidad en Webmin → explotación para obtener acceso al sistema → escalada de privilegios hasta root.
+- Walking CMS: Enumeración web → identificación y explotación de una vulnerabilidad en un CMS → obtención de acceso al servidor → escalada de privilegios hasta root.
   
