@@ -18,4 +18,5 @@ El objetivo es:
 - Walking Dead: Enumeración de servicios → identificación de una vulnerabilidad en Webmin → explotación para obtener acceso al sistema → escalada de privilegios hasta root.
 - Walking CMS: Enumeración web → identificación y explotación de una vulnerabilidad en un CMS → obtención de acceso al servidor → escalada de privilegios hasta root.
 - Winterfell: Enumeración web y SMB → escalada de privilegios mediante movimiento entre usuarios.
+- Database: bypass de login con inyección SQL, enumeración SMB o fuerza bruta de SSH, pivoting entre users y/o escalada de privilegios abusando de Java.
   
